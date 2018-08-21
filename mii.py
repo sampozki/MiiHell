@@ -1,7 +1,9 @@
+# Plays random samples atm cos even more anoying
+# TODO Play in correct order but in random intervals :DDDDD
+
 import winsound
 import os
 import random
-# TODO kaikki
 
 
 def main():
