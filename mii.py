@@ -1,18 +1,16 @@
-# Plays random samples atm cos even more anoying
-# TODO Play in correct order but in random intervals :DDDDD
-
 import winsound
 import os
+import time
 import random
 
 
 def main():
     directory = 'Mii/'
-    sounds = os.listdir(directory)
+    sounds = sorted(os.listdir(directory), key=lambda x: int(os.path.splitext(x)[0]))
     while True:
-        sound = random.choice(sounds)
-        print(sound)
-        winsound.PlaySound(directory + sound, winsound.SND_FILENAME)
+        for sound in sounds:
+            winsound.PlaySound(directory + sound, winsound.SND_FILENAME)
+            time.sleep(round(random.uniform(0, 3), 1))
 
 
 if __name__ == '__main__':
