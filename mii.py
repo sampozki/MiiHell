@@ -17,10 +17,10 @@ def main():
     while True:
         for sound in soundlist:
             PlaySound(directory + sound, SND_FILENAME)
-            sleep(round(uniform(0, 3), 1))
+            sleep(round(uniform(0, 3.5), 1))
 
         # Mutates the pattern
-        for a in range(0, randint(1, 3)):
+        for a in range(0, randint(1, 2)):
             mutationa = randint(0, len(soundlist)-1)
             mutationb = randint(0, len(soundlist)-1)
             soundlist[mutationa], soundlist[mutationb] = soundlist[mutationb], soundlist[mutationa]
