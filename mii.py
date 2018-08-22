@@ -1,3 +1,5 @@
+# MiiHell  ©sampozki -2018
+
 from winsound import PlaySound, SND_FILENAME
 from os import listdir, path
 from time import sleep, time
@@ -17,6 +19,7 @@ def main():
             PlaySound(directory + sound, SND_FILENAME)
             sleep(round(uniform(0, 3), 1))
 
+        # Mutates the pattern
         for a in range(0, randint(1, 3)):
             mutationa = randint(0, len(soundlist)-1)
             mutationb = randint(0, len(soundlist)-1)
