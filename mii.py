@@ -8,7 +8,7 @@ from shutil import rmtree, copytree
 from pydub import AudioSegment
 
 
-def main():
+def main(mutation, modulation):
     start = time()
     loop = 1
     destinationdirectory = 'Temp/'
@@ -33,27 +33,29 @@ def main():
         print()
 
         # Changes the pitch
-        if randint(0, 1) == 1:
-            for a in range(0, randint(1, 3)):
-                filu = choice(soundlist)
-                sound = AudioSegment.from_file(destinationdirectory + filu, format='wav')
-                octaves = round(uniform(-0.18, 0.18), 2)
-                new_sample_rate = int(sound.frame_rate * (2.0 ** octaves))
-                changedsound = sound._spawn(sound.raw_data, overrides={'frame_rate': new_sample_rate})
-                changedsound = changedsound.set_frame_rate(44100)
-                changedsound.export(destinationdirectory + filu, format='wav')
-                print(filu + ' ~ ' + str(octaves) + ' octaves', end="  ")
-        else:
-            print()
+        if modulation:
+            if randint(0, 1) == 1:
+                for a in range(0, randint(1, 3)):
+                    filu = choice(soundlist)
+                    sound = AudioSegment.from_file(destinationdirectory + filu, format='wav')
+                    octaves = round(uniform(-0.18, 0.18), 2)
+                    new_sample_rate = int(sound.frame_rate * (2.0 ** octaves))
+                    changedsound = sound._spawn(sound.raw_data, overrides={'frame_rate': new_sample_rate})
+                    changedsound = changedsound.set_frame_rate(44100)
+                    changedsound.export(destinationdirectory + filu, format='wav')
+                    print(filu + ' ~ ' + str(octaves) + ' octaves', end="  ")
+            else:
+                print()
 
         print()
 
         # Mutates the pattern
-        for a in range(0, randint(1, 2)):
-            mutationa = randint(0, len(soundlist)-1)
-            mutationb = randint(0, len(soundlist)-1)
-            soundlist[mutationa], soundlist[mutationb] = soundlist[mutationb], soundlist[mutationa]
-            print(soundlist[mutationa] + " <-> " + soundlist[mutationb], end="  ")
+        if mutation:
+            for a in range(0, randint(1, 2)):
+                mutationa = randint(0, len(soundlist)-1)
+                mutationb = randint(0, len(soundlist)-1)
+                soundlist[mutationa], soundlist[mutationb] = soundlist[mutationb], soundlist[mutationa]
+                print(soundlist[mutationa] + " <-> " + soundlist[mutationb], end="  ")
 
         loop += 1
         playtime = round((time() - start) / 60, 1)
@@ -63,4 +65,6 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    mutation = True
+    modulation = True
+    main(mutation, modulation)
