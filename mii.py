@@ -34,7 +34,7 @@ def main():
         print()
 
         # Changes the pitch
-        if randint(0, 2) == 1:
+        if randint(0, 1) == 1:
             for a in range(0, randint(1, 3)):
                 filu = choice(soundlist)
                 sound = AudioSegment.from_file(destinationdirectory + filu, format='wav')
@@ -47,7 +47,7 @@ def main():
         else:
             print()
 
-            print()
+        print()
 
         # Mutates the pattern
         for a in range(0, randint(1, 2)):
