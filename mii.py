@@ -4,7 +4,7 @@ from winsound import PlaySound, SND_FILENAME
 from os import listdir, path
 from time import sleep, time
 from random import uniform, randint, choice
-import shutil
+from shutil import rmtree, copytree
 from pydub import AudioSegment
 
 
@@ -15,12 +15,11 @@ def main():
     directory = 'Mii/'
 
     if path.isdir(destinationdirectory):
-        shutil.rmtree(destinationdirectory)
-
-        shutil.copytree(directory, destinationdirectory)
+        rmtree(destinationdirectory)
+        copytree(directory, destinationdirectory)
         print('Created new temporary folder from ' + directory + ' to ' + destinationdirectory)
     else:
-        shutil.copytree(directory, destinationdirectory)
+        copytree(directory, destinationdirectory)
         print('Created temporary folder from ' + directory + ' to ' + destinationdirectory)
 
     soundlist = sorted(listdir(destinationdirectory), key=lambda x: int(path.splitext(x)[0]))
@@ -43,7 +42,7 @@ def main():
                 changedsound = sound._spawn(sound.raw_data, overrides={'frame_rate': new_sample_rate})
                 changedsound = changedsound.set_frame_rate(44100)
                 changedsound.export(destinationdirectory + filu, format='wav')
-                print(filu + ' ⭥ ' + str(octaves) + ' octaves', end="  ")
+                print(filu + ' ~ ' + str(octaves) + ' octaves', end="  ")
         else:
             print()
 
@@ -54,7 +53,7 @@ def main():
             mutationa = randint(0, len(soundlist)-1)
             mutationb = randint(0, len(soundlist)-1)
             soundlist[mutationa], soundlist[mutationb] = soundlist[mutationb], soundlist[mutationa]
-            print(soundlist[mutationa] + " ⭤ " + soundlist[mutationb], end="  ")
+            print(soundlist[mutationa] + " <-> " + soundlist[mutationb], end="  ")
 
         loop += 1
         playtime = round((time() - start) / 60, 1)
