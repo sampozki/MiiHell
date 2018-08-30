@@ -35,14 +35,16 @@ def main(mutation, modulation, continuesaved):
             soundlist = sorted(listdir(destinationdirectory), key=lambda x: int(path.splitext(x)[0]))
 
     else:
-        if 'soundlist' in cfg['settings']:
-            print("\nLoaded old play order and statistics.")
-            soundlist = cfg['settings']['soundlist'].split(", ")
+        if 'settings' in cfg:
+            if 'soundlist' in cfg['settings']:
+                print("\nLoaded old play order and statistics.")
+                soundlist = cfg['settings']['soundlist'].split(", ")
+            else:
+                soundlist = sorted(listdir(destinationdirectory), key=lambda x: int(path.splitext(x)[0]))
+                cfg['settings'] = {'soundlist': ", ".join(soundlist)}
         else:
             soundlist = sorted(listdir(destinationdirectory), key=lambda x: int(path.splitext(x)[0]))
-            cfg['settings'] = {'soundlist': ", ".join(soundlist)}
-            with open('save.ini', 'w') as configfile:
-                cfg.write(configfile)
+            cfg['settings'] = {'soundist': ", ".join(soundlist)}
 
     if 'loop' in cfg['settings']:
         print('\n\nRound: ' + str(cfg['settings']['loop']) + ' | Time Spend: ' + str(cfg['settings']['playtime']) + ' minutes')
@@ -101,7 +103,6 @@ if __name__ == '__main__':
         mutation = True
         modulation = True
         continuesaved = True
-        print("Pattern mutation:", mutation, "Pitch modulation:", modulation, "Load from profile:", continuesaved)
 
     else:
         for a in range(0, len(argv)-1):
@@ -113,6 +114,6 @@ if __name__ == '__main__':
         mutation = argv[0]
         modulation = argv[1]
         continuesaved = argv[2]
-        print("Pattern mutation:", mutation, "Pitch modulation:", modulation, "Load from profile:", continuesaved)
 
+    print("\nPattern mutation:", mutation, "Pitch modulation:", modulation, "Load from profile:", continuesaved, "\n")
     main(mutation, modulation, continuesaved)
