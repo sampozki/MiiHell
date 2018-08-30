@@ -6,30 +6,56 @@ from time import sleep, time
 from random import uniform, randint, choice
 from shutil import rmtree, copytree
 from pydub import AudioSegment
+from configparser import ConfigParser
+from sys import argv
 
 
-def main(mutation, modulation):
+def main(mutation, modulation, continuesaved):
     start = time()
     loop = 1
     destinationdirectory = 'Temp/'
     directory = 'Mii/'
 
-    if path.isdir(destinationdirectory):
-        rmtree(destinationdirectory)
-        copytree(directory, destinationdirectory)
-        print('Created new temporary folder from ' + directory + ' to ' + destinationdirectory)
+    cfg = ConfigParser()
+    if path.isfile('save.ini'):
+        cfg.read('save.ini')
     else:
-        copytree(directory, destinationdirectory)
-        print('Created temporary folder from ' + directory + ' to ' + destinationdirectory)
+        a = open('save.ini', 'w')
+        a.close()
 
-    soundlist = sorted(listdir(destinationdirectory), key=lambda x: int(path.splitext(x)[0]))
+    if not continuesaved:
+        if path.isdir(destinationdirectory):
+            rmtree(destinationdirectory)
+            copytree(directory, destinationdirectory)
+            print('Created new temporary folder from ' + directory + ' to ' + destinationdirectory)
+            soundlist = sorted(listdir(destinationdirectory), key=lambda x: int(path.splitext(x)[0]))
+        else:
+            copytree(directory, destinationdirectory)
+            print('Created temporary folder from ' + directory + ' to ' + destinationdirectory)
+            soundlist = sorted(listdir(destinationdirectory), key=lambda x: int(path.splitext(x)[0]))
 
-    print('Original play order: ' + ', '.join(soundlist))
+    else:
+        if 'soundlist' in cfg['settings']:
+            print("\nLoaded old play order and statistics.")
+            soundlist = cfg['settings']['soundlist'].split(", ")
+        else:
+            soundlist = sorted(listdir(destinationdirectory), key=lambda x: int(path.splitext(x)[0]))
+            cfg['settings'] = {'soundlist': ", ".join(soundlist)}
+            with open('save.ini', 'w') as configfile:
+                cfg.write(configfile)
+
+    if 'loop' in cfg['settings']:
+        print('\n\nRound: ' + str(cfg['settings']['loop']) + ' | Time Spend: ' + str(cfg['settings']['playtime']) + ' minutes')
+        print('Current play order: ' + ', '.join(soundlist))
+    else:
+        print('Original play order: ' + ', '.join(soundlist))
 
     while True:
         for sound in soundlist:
             PlaySound(destinationdirectory + sound, SND_FILENAME)
             sleep(round(uniform(0, 2), 1))
+            if randint(0, 100000) == 88:
+                PlaySound('surprise.wav', SND_FILENAME)
         print()
 
         # Changes the pitch
@@ -63,8 +89,30 @@ def main(mutation, modulation):
         print('\n\nRound: ' + str(loop) + ' | Time Spend: ' + str(playtime) + ' minutes')
         print('Current play order: ' + ', '.join(soundlist))
 
+        cfg['settings'] = {'soundlist': ", ".join(soundlist),
+                           'loop': loop,
+                           'playtime': playtime}
+        with open('save.ini', 'w') as configfile:
+            cfg.write(configfile)
+
 
 if __name__ == '__main__':
-    mutation = True
-    modulation = True
-    main(mutation, modulation)
+    if len(argv) == 1:
+        mutation = True
+        modulation = True
+        continuesaved = True
+        print("Pattern mutation:", mutation, "Pitch modulation:", modulation, "Load from profile:", continuesaved)
+
+    else:
+        for a in range(0, len(argv)-1):
+            if argv[a].lower() == "t":
+                argv[a] = True
+            elif argv[a].lower() == "f":
+                argv[a] = False
+
+        mutation = argv[0]
+        modulation = argv[1]
+        continuesaved = argv[2]
+        print("Pattern mutation:", mutation, "Pitch modulation:", modulation, "Load from profile:", continuesaved)
+
+    main(mutation, modulation, continuesaved)
