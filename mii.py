@@ -35,6 +35,11 @@ def main(mutation, modulation, continuesaved):
             soundlist = sorted(listdir(destinationdirectory), key=lambda x: int(path.splitext(x)[0]))
 
     else:
+        if path.isdir(destinationdirectory):
+            rmtree(destinationdirectory)
+            copytree(directory, destinationdirectory)
+        else:
+            copytree(directory, destinationdirectory)
         if 'settings' in cfg:
             if 'soundlist' in cfg['settings']:
                 print("\nLoaded old play order and statistics.")
