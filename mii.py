@@ -61,8 +61,8 @@ def main(mutation, modulation, continuesaved):
         for sound in soundlist:
             PlaySound(destinationdirectory + sound, SND_FILENAME)
             sleep(round(uniform(0, 2), 1))
-            if randint(0, 100000) == 88:
-                PlaySound('surprise.wav', SND_FILENAME)
+            #if randint(0, 100000) == 88:
+            #    PlaySound('surprise.wav', SND_FILENAME)
         print()
 
         # Changes the pitch
@@ -71,7 +71,7 @@ def main(mutation, modulation, continuesaved):
                 for a in range(0, randint(1, 3)):
                     filu = choice(soundlist)
                     sound = AudioSegment.from_file(destinationdirectory + filu, format='wav')
-                    octaves = round(uniform(-0.18, 0.18), 2)
+                    octaves = round(-loop/100, 2)
                     new_sample_rate = int(sound.frame_rate * (2.0 ** octaves))
                     changedsound = sound._spawn(sound.raw_data, overrides={'frame_rate': new_sample_rate})
                     changedsound = changedsound.set_frame_rate(44100)
@@ -82,13 +82,6 @@ def main(mutation, modulation, continuesaved):
 
         print()
 
-        # Mutates the pattern
-        if mutation:
-            for a in range(0, randint(1, 2)):
-                mutationa = randint(0, len(soundlist)-1)
-                mutationb = randint(0, len(soundlist)-1)
-                soundlist[mutationa], soundlist[mutationb] = soundlist[mutationb], soundlist[mutationa]
-                print(soundlist[mutationa] + " <-> " + soundlist[mutationb], end="  ")
 
         loop += 1
         playtime = round((time() - start) / 60, 1)
